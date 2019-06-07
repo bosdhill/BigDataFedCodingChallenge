@@ -46,7 +46,5 @@ def commodity():
     except:
         return jsonify({"data": {}, "mean" : "null", "variance" : "null"})
 
-
-
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
