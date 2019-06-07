@@ -2,6 +2,8 @@ from flask import Flask, jsonify
 from flask import request
 
 app = Flask(__name__)
+GOLD_DATA_PATH = "data/golddateandprice.csv"
+SILVER_DATA_PATH = "data/silverdateandprice.csv"
 
 # E(X ^ power)
 def computeMean(data, power):
@@ -34,9 +36,9 @@ def commodity():
     commodity_type = request.args.get("commodity_type")
     data = {}
     if commodity_type == "gold":
-        data = fetchData("../data/golddateandprice.csv", start_date, end_date)
+        data = fetchData(GOLD_DATA_PATH, start_date, end_date)
     if commodity_type == "silver":
-        data = fetchData("../data/silverdateandprice.csv", start_date, end_date)
+        data = fetchData(SILVER_DATA_PATH, start_date, end_date)
     mean = computeMean(data, 1)
     variance = computeVariance(mean, data)
 
