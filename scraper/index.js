@@ -16,9 +16,11 @@ rp(options)
 $('#results_box').find('table.genTbl.closedTbl.historicalTbl tr').each(
   function(index, element) {
       textArray = $(element).text().split('\n');
-      if (index != 0)
-      console.log("Date: "  + textArray[1].replace(/ /g, '') +
-                  " Price: $" + textArray[2].replace(/ /g, ''));
+      if (index != 0)  {
+        let date = new Date(textArray[1]).toISOString();
+        let price = textArray[2].replace(/ /g, '');
+        console.log("Date: "  + date + " Price: $" + price);
+      }
   });
 })
 .catch((err) => {
