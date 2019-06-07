@@ -15,7 +15,10 @@ rp(options)
 .then(($) => {
 $('#results_box').find('table.genTbl.closedTbl.historicalTbl tr').each(
   function(index, element) {
-      console.log($(element).find('td').text());
+      textArray = $(element).text().split('\n');
+      if (index != 0)
+      console.log("Date: "  + textArray[1].replace(/ /g, '') +
+                  " Price: $" + textArray[2].replace(/ /g, ''));
   });
 })
 .catch((err) => {
