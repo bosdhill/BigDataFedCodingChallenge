@@ -1,0 +1,24 @@
+{
+  "name": "bigdatafedcodingchallenge",
+  "version": "1.0.0",
+  "description": "1. Please write a program to fetch the historical prices and dates of gold and silver from these 2 URLs:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bosdhill/BigDataFedCodingChallenge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bosdhill/BigDataFedCodingChallenge/issues"
+  },
+  "homepage": "https://github.com/bosdhill/BigDataFedCodingChallenge#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "datejs": "^1.0.0-rc3",
+    "request-promise": "^4.2.4"
+  }
+}

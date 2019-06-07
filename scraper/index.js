@@ -2,9 +2,15 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
+// Constants
+GOLD_DATA_PATH = "../data/golddateandprice.csv"
+SILVER_DATA_PATH = "../data/silverdateandprice.csv"
+SILVER_DATA_URL = `https://www.investing.com/commodities/silver-historical-data`
+GOLD_DATA_URL = `https://www.investing.com/commodities/gold-historical-data`
+
 // Parameters
 const silver = {
-    uri: `https://www.investing.com/commodities/silver-historical-data`,
+    uri: SILVER_DATA_URL,
     transform: function (body) {
       return cheerio.load(body);
     },
@@ -14,7 +20,7 @@ const silver = {
 };
 
 const gold = {
-  uri: `https://www.investing.com/commodities/gold-historical-data`,
+  uri: GOLD_DATA_URL,
   transform: function (body) {
     return cheerio.load(body);
   },
@@ -30,7 +36,7 @@ toISOStr = (function(str) {
             .toISOString().split("T")[0];
 });
 
-fetchData = (function(outFile, options) {
+scrapeAndWriteData = (function(outFile, options) {
   rp(options)
   .then(($) => {
     $('#results_box').find('table.genTbl.closedTbl.historicalTbl tr').each(
@@ -51,12 +57,10 @@ fetchData = (function(outFile, options) {
 });
 
 generateCSVs = (function() {
-  // Scrape data save historical gold date and price data in CSV
-  fs.truncate("golddateandprice.csv", 0, function(){});
-  fetchData("golddateandprice.csv", gold);
-  // Scrape data save historical silver date and price data in CSV
-  fs.truncate("silverdateandprice.csv", 0, function(){});
-  fetchData("silverdateandprice.csv", silver);
+  fs.truncate(GOLD_DATA_PATH, 0, function(){});
+  scrapeAndWriteData(GOLD_DATA_PATH, gold);
+  fs.truncate(SILVER_DATA_PATH, 0, function(){});
+  scrapeAndWriteData(SILVER_DATA_PATH, silver);
 });
 
 // Main
