@@ -8,7 +8,6 @@ SILVER_DATA_PATH = "data/silverdateandprice.csv"
 SILVER_DATA_URL = `https://www.investing.com/commodities/silver-historical-data`
 GOLD_DATA_URL = `https://www.investing.com/commodities/gold-historical-data`
 
-// Parameters
 const silver = {
     uri: SILVER_DATA_URL,
     transform: function (body) {
