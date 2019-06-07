@@ -31,18 +31,22 @@ def fetchData(file, startDate, endDate):
 
 @app.route('/commodity', methods=['GET'])
 def commodity():
-    start_date = request.args.get("start_date")
-    end_date = request.args.get("end_date")
-    commodity_type = request.args.get("commodity_type")
-    data = {}
-    if commodity_type == "gold":
-        data = fetchData(GOLD_DATA_PATH, start_date, end_date)
-    if commodity_type == "silver":
-        data = fetchData(SILVER_DATA_PATH, start_date, end_date)
-    mean = computeMean(data, 1)
-    variance = computeVariance(mean, data)
+    try:
+        start_date = request.args.get("start_date")
+        end_date = request.args.get("end_date")
+        commodity_type = request.args.get("commodity_type")
+        data = {}
+        if commodity_type == "gold":
+            data = fetchData(GOLD_DATA_PATH, start_date, end_date)
+        if commodity_type == "silver":
+            data = fetchData(SILVER_DATA_PATH, start_date, end_date)
+        mean = computeMean(data, 1)
+        variance = computeVariance(mean, data)
+        return jsonify({"data": data, "mean" : round(mean, 2), "variance" : round(variance, 2)})
+    except:
+        return jsonify({"data": {}, "mean" : "null", "variance" : "null"})
 
-    return jsonify({"data": data, "mean" : round(mean, 2), "variance" : round(variance, 2)})
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
