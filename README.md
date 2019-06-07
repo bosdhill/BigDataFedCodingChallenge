@@ -7,7 +7,7 @@ All commands are run from the main project directory.
 
 1. To run the webscraper, enter the following:
 ``` bash
-node node/scraper.js
+node js/scraper.js
 ```
 2. To run the server, enter the following:
 ``` bash
