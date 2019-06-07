@@ -3,8 +3,8 @@ const cheerio = require('cheerio');
 const fs = require('fs');
 
 // Constants
-GOLD_DATA_PATH = "../data/golddateandprice.csv"
-SILVER_DATA_PATH = "../data/silverdateandprice.csv"
+GOLD_DATA_PATH = "data/golddateandprice.csv"
+SILVER_DATA_PATH = "data/silverdateandprice.csv"
 SILVER_DATA_URL = `https://www.investing.com/commodities/silver-historical-data`
 GOLD_DATA_URL = `https://www.investing.com/commodities/gold-historical-data`
 
