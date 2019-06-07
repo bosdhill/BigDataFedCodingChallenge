@@ -1,5 +1,6 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
+const fs = require('fs');
 
 // Parameters
 const silver = {
@@ -29,7 +30,7 @@ toISOStr = (function(str) {
             .toISOString().split("T")[0];
 });
 
-fetchData = (function(options) {
+fetchData = (function(outFile, options) {
   rp(options)
   .then(($) => {
     $('#results_box').find('table.genTbl.closedTbl.historicalTbl tr').each(
@@ -37,8 +38,10 @@ fetchData = (function(options) {
           textArray = $(element).text().split('\n');
           if (index != 0)  {
             let date = toISOStr(textArray[1]);
-            let price = textArray[2].replace(/ /g, '');
-            console.log("Date: "  + date + " Price: $" + price);
+            let price = textArray[2].replace(/ /g, '').replace(/,/g, '');
+            fs.appendFile(outFile, date + "," + price + "\n", function (err) {
+              if (err) throw err;
+            });
           }
       });
   })
@@ -47,7 +50,14 @@ fetchData = (function(options) {
   });
 });
 
-// Scrape data from URLs
-fetchData(silver);
-fetchData(gold);
+generateCSVs = (function() {
+  // Scrape data save historical gold date and price data in CSV
+  fs.truncate("golddateandprice.csv", 0, function(){});
+  fetchData("golddateandprice.csv", gold);
+  // Scrape data save historical silver date and price data in CSV
+  fs.truncate("silverdateandprice.csv", 0, function(){});
+  fetchData("silverdateandprice.csv", silver);
+});
 
+// Main
+generateCSVs();
