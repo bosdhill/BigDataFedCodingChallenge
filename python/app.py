@@ -1,5 +1,4 @@
-from flask import Flask, jsonify
-from flask import request
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 GOLD_DATA_PATH = "data/golddateandprice.csv"
@@ -9,7 +8,7 @@ SILVER_DATA_PATH = "data/silverdateandprice.csv"
 def computeMean(data, power):
     x = 0.0
     n = 0
-    for date, price in data.items():
+    for _, price in data.items():
         x += float(price) ** power
         n += 1
     return x / n
@@ -35,7 +34,6 @@ def commodity():
         start_date = request.args.get("start_date")
         end_date = request.args.get("end_date")
         commodity_type = request.args.get("commodity_type")
-        data = {}
         if commodity_type == "gold":
             data = fetchData(GOLD_DATA_PATH, start_date, end_date)
         if commodity_type == "silver":
