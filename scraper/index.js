@@ -17,7 +17,7 @@ $('#results_box').find('table.genTbl.closedTbl.historicalTbl tr').each(
   function(index, element) {
       textArray = $(element).text().split('\n');
       if (index != 0)  {
-        let date = new Date(textArray[1]).toISOString();
+        let date = new Date(textArray[1]).toISOString().split("T")[0];
         let price = textArray[2].replace(/ /g, '');
         console.log("Date: "  + date + " Price: $" + price);
       }
