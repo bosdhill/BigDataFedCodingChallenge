@@ -9,27 +9,27 @@ GOLD_DATA_PATH = "data/golddateandprice.csv"
 SILVER_DATA_PATH = "data/silverdateandprice.csv"
 START_DATE = '01/01/2019'
 END_DATE ='06/06/2020'
-global d
+global driver
 
 # Methods
 # Enters dates to display data in date range START_DATE to END_DATE
 def display_all_dates():
-    d.find_element_by_id('widgetFieldDateRange').click()
-    d.implicitly_wait(1)
-    sDate  = d.find_element_by_id('startDate')
+    driver.find_element_by_id('widgetFieldDateRange').click()
+    driver.implicitly_wait(1)
+    sDate = driver.find_element_by_id('startDate')
     sDate.clear()
     sDate.send_keys(START_DATE)
-    eDate = d.find_element_by_id('endDate')
+    eDate = driver.find_element_by_id('endDate')
     eDate.clear()
     eDate.send_keys(END_DATE)
-    d.implicitly_wait(1)
-    d.find_element_by_id('applyBtn').click()
-    d.implicitly_wait(2)
+    driver.implicitly_wait(1)
+    driver.find_element_by_id('applyBtn').click()
+    driver.implicitly_wait(2)
 
 # Scrapes and writes out data table to file at path
 def write_table(path):
     try:
-        resultsBox = d.find_element_by_id("results_box")
+        resultsBox = driver.find_element_by_id("results_box")
         tbody = resultsBox.find_element_by_tag_name('tbody')
         rows = tbody.find_elements_by_tag_name('tr')
         fp = open(path, "w")
@@ -40,53 +40,51 @@ def write_table(path):
             fp.write(date.isoformat().split('T')[0] + ","
                 + col[1].text.replace(',','') + "\n")
         fp.close()
-        print("Wrote to " + path)
+        print(f"Wrote to {path}\n")
     except:
-        print("Closing pop up banner and retrying...")
         close_pop_up()
         write_table(path)
 
 # Closes email pop up banner
 def close_pop_up():
-    d.implicitly_wait(2)
+    print("\tClosing pop up banner...\n")
+    driver.implicitly_wait(2)
     try:
-        d.execute_script("""
+        driver.execute_script("""
         (function() {
             document.getElementsByClassName("popupCloseIcon largeBannerCloser")[0].click();
         })()
         """)
     except:
         pass
-    d.implicitly_wait(2)
+    driver.implicitly_wait(2)
 
 # Generates CSV of data retrieved from url and writes it to file at path
 def generate_csv(url, path):
-    d.get(url)
-    d.implicitly_wait(4)
+    print(f"\tScraping from {url}...")
+    driver.get(url)
+    driver.implicitly_wait(4)
     try:
         close_pop_up()
         display_all_dates()
         write_table(path)
     except:
-        print("Closing pop up banner and retrying...")
         close_pop_up()
         display_all_dates()
         write_table(path)
 
 # Main
 if __name__ == "__main__":
-    global d
+    global driver
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--driver",
                         help="The path to the chrome driver executable",
                         required=True)
     args = parser.parse_args()
-    d = webdriver.Chrome(args.driver)
-    print("Generating CSV files...")
+    driver = webdriver.Chrome(args.driver)
+    print("Generating CSV files...\n")
     try:
-        print("Scraping gold data...")
         generate_csv(GOLD_DATA_URL, GOLD_DATA_PATH)
-        print("Scraping silver data...")
         generate_csv(SILVER_DATA_URL, SILVER_DATA_PATH)
         print("Successfully generated CSV files!")
     except:
