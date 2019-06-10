@@ -6,11 +6,11 @@ GOLD_DATA_PATH = "data/golddateandprice.csv"
 SILVER_DATA_PATH = "data/silverdateandprice.csv"
 
 # Methods
-# Computes E(X ^ power)
+# Computes the mean of the prices
 def compute_mean(prices):
     return sum(price for price in prices) / len(prices)
 
-# Computes sum of (xi - mean)^2 / n
+# Computes the variance of the prices
 def compute_variance(mean, prices):
     return sum((price - mean) ** 2 for price in prices) / len(prices)
 
