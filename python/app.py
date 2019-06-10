@@ -10,7 +10,7 @@ SILVER_DATA_PATH = "data/silverdateandprice.csv"
 def compute_mean(prices):
     return sum(price for price in prices) / len(prices)
 
-# Computes E(X^2) - [E(X)]^2
+# Computes sum of (xi - mean)^2 / n
 def compute_variance(mean, prices):
     return sum((price - mean) ** 2 for price in prices) / len(prices)
 
