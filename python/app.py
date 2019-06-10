@@ -8,11 +8,11 @@ SILVER_DATA_PATH = "data/silverdateandprice.csv"
 # Methods
 # Computes E(X ^ power)
 def compute_mean(prices):
-    return sum(float(price) for price in prices) / len(prices)
+    return sum(price for price in prices) / len(prices)
 
 # Computes E(X^2) - [E(X)]^2
 def compute_variance(mean, prices):
-    return sum((float(price) - mean) ** 2 for price in prices) / len(prices)
+    return sum((price - mean) ** 2 for price in prices) / len(prices)
 
 # Reads prices from file at path in date range of startDate to endDate
 def fetch_data(path, startDate, endDate):
@@ -23,7 +23,7 @@ def fetch_data(path, startDate, endDate):
         date = values[0]
         price = values[1][:-1]
         if date >= startDate and date <= endDate:
-            data[date] = price
+            data[date] = float(price)
     fp.close()
     return data
 
