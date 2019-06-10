@@ -14,20 +14,20 @@ def compute_mean(prices):
 def compute_variance(mean, prices):
     return sum((price - mean) ** 2 for price in prices) / len(prices)
 
-# Reads prices from file at path in date range of startDate to endDate
-def fetch_data(path, startDate, endDate):
+# Reads prices from file at path in date range of start_date to end_date
+def fetch_data(path, start_date, end_date):
     data = {}
     fp = open(path, "r")
     for _, line in enumerate(fp):
         values = line.split(",")
         date = values[0]
         price = values[1][:-1]
-        if date >= startDate and date <= endDate:
+        if date >= start_date and date <= end_date:
             data[date] = float(price)
     fp.close()
     return data
 
-# API function
+# API endpoint
 @app.route('/commodity', methods=['GET'])
 def commodity():
     try:
