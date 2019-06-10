@@ -1,15 +1,15 @@
 from selenium import webdriver
-import dateutil.parser as parser
+import dateutil.parser as date_parser
+import argparse
 
 # Globals and Constants
-DRIVER_PATH = "/Users/bdhill/bin/chromedriver"
 GOLD_DATA_URL = "https://www.investing.com/commodities/gold-historical-data"
 SILVER_DATA_URL = "https://www.investing.com/commodities/silver-historical-data"
 GOLD_DATA_PATH = "data/golddateandprice.csv"
 SILVER_DATA_PATH = "data/silverdateandprice.csv"
 START_DATE = '01/01/2019'
 END_DATE ='06/06/2020'
-d = webdriver.Chrome(DRIVER_PATH)
+global d
 
 # Methods
 # Enters dates to display data in date range START_DATE to END_DATE
@@ -24,8 +24,9 @@ def display_all_dates():
     eDate.send_keys(END_DATE)
     d.implicitly_wait(1)
     d.find_element_by_id('applyBtn').click()
+    d.implicitly_wait(2)
 
-# Writes out data table to file at path
+# Scrapes and writes out data table to file at path
 def write_table(path):
     try:
         resultsBox = d.find_element_by_id("results_box")
@@ -35,11 +36,13 @@ def write_table(path):
         fp.truncate(0)
         for row in rows:
             col = row.find_elements_by_tag_name('td')
-            date = parser.parse(col[0].text)
+            date = date_parser.parse(col[0].text)
             fp.write(date.isoformat().split('T')[0] + ","
                 + col[1].text.replace(',','') + "\n")
         fp.close()
+        print("Wrote to " + path)
     except:
+        print("Closing pop up banner and retrying...")
         close_pop_up()
         write_table(path)
 
@@ -65,15 +68,25 @@ def generate_csv(url, path):
         display_all_dates()
         write_table(path)
     except:
+        print("Closing pop up banner and retrying...")
         close_pop_up()
         display_all_dates()
         write_table(path)
 
 # Main
 if __name__ == "__main__":
+    global d
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--driver",
+                        help="The path to the chrome driver executable",
+                        required=True)
+    args = parser.parse_args()
+    d = webdriver.Chrome(args.driver)
     print("Generating CSV files...")
     try:
+        print("Scraping gold data...")
         generate_csv(GOLD_DATA_URL, GOLD_DATA_PATH)
+        print("Scraping silver data...")
         generate_csv(SILVER_DATA_URL, SILVER_DATA_PATH)
         print("Successfully generated CSV files!")
     except:

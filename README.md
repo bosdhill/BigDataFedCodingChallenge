@@ -2,12 +2,16 @@
 
 This is my submission for the Big Data Federation programming challenge.
 
+## Required:
+1. Selenium for python3
+2. Chrome web driver
+
 ## Instructions
 All commands are run from the main project directory.
 
 1. To run the webscraper, enter the following:
 ``` bash
-node js/scraper.js
+python3 python3/scraper.py
 ```
 2. To run the server, enter the following:
 ``` bash

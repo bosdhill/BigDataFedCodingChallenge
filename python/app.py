@@ -19,7 +19,7 @@ def computeMean(data, power):
 def computeVariance(mean, data):
     return computeMean(data, 2) - mean * mean
 
-# Fetchs prices from file at path in date range of startDate to endDate
+# Reads prices from file at path in date range of startDate to endDate
 def fetchData(path, startDate, endDate):
     data = {}
     fp = open(path, "r")
