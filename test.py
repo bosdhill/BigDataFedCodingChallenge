@@ -7,36 +7,44 @@ import time
 d = webdriver.Chrome()
 
 def display_all_dates():
-    d.find_element_by_id('widgetFieldDateRange').click() #show the date picker
-    sDate  = d.find_element_by_id('startDate') # set start date input element into variable
-    sDate.clear() #clear existing entry
-    sDate.send_keys('01/01/2019') #add custom entry
-    eDate = d.find_element_by_id('endDate') #repeat for end date
+    d.find_element_by_id('widgetFieldDateRange').click()
+    sDate  = d.find_element_by_id('startDate')
+    sDate.clear()
+    sDate.send_keys('01/01/2019')
+    eDate = d.find_element_by_id('endDate')
     eDate.clear()
     eDate.send_keys('06/06/2020')
-    d.find_element_by_id('applyBtn').click() #submit changes
+    d.find_element_by_id('applyBtn').click()
+    time.sleep(3)
 
 def print_table():
-    baseTable = d.find_element_by_class_name("genTbl closedTbl historicalTbl")
-    print(baseTable)
-    for elt in baseTable:
-        print(elt)
-
-if __name__ == "__main__":
-    d.get('https://www.investing.com/commodities/gold-historical-data')
-    time.sleep(25)
-
     try:
-        display_all_dates()
-        print_table()
+        resultsBox = d.find_element_by_id("results_box")
+        tbody = resultsBox.find_element_by_tag_name('tbody')
+        rows = tbody.find_elements_by_tag_name('tr')
+        for row in rows:
+            col = row.find_elements_by_tag_name('td')
+            print("Date", col[0].text, "Price", col[1].text)
     except:
-        print("Error! Could not display dates.")
-        print(d.page_source)
-        # d.find_element_by_class_name('closePopup').click()
-        d.execute_script("""
+        close_pop_up()
+        print_table()
+
+def close_pop_up():
+    d.execute_script("""
     (function() {
         document.getElementsByClassName("popupCloseIcon largeBannerCloser")[0].click();
     })()
 """)
-        time.sleep(3) # wait for it to dismiss
+    time.sleep(3) # wait for it to dismiss
+
+if __name__ == "__main__":
+    d.get('https://www.investing.com/commodities/gold-historical-data')
+    time.sleep(2)
+    try:
+        close_pop_up()
         display_all_dates()
+        print_table()
+    except:
+        close_pop_up()
+        display_all_dates()
+        print_table()
