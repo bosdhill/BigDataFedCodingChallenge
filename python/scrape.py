@@ -42,6 +42,7 @@ def write_table(path):
             date = parser.parse(col[0].text)
             fp.write(date.isoformat().split('T')[0] + ","
                 + col[1].text.replace(',','') + "\n")
+        fp.close()
     except:
         close_pop_up()
         write_table(path)

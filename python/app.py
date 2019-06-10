@@ -1,10 +1,12 @@
 from flask import Flask, jsonify, request
 
+# Globals and Constants
 app = Flask(__name__)
 GOLD_DATA_PATH = "data/golddateandprice.csv"
 SILVER_DATA_PATH = "data/silverdateandprice.csv"
 
-# E(X ^ power)
+# Methods
+# Computes E(X ^ power)
 def computeMean(data, power):
     x = 0.0
     n = 0
@@ -13,21 +15,24 @@ def computeMean(data, power):
         n += 1
     return x / n
 
-# E(X^2) - [E(X)]^2
+# Computes E(X^2) - [E(X)]^2
 def computeVariance(mean, data):
     return computeMean(data, 2) - mean * mean
 
-def fetchData(file, startDate, endDate):
+# Fetchs prices from file at path in date range of startDate to endDate
+def fetchData(path, startDate, endDate):
     data = {}
-    fp = open(file, "r")
+    fp = open(path, "r")
     for _, line in enumerate(fp):
         values = line.split(",")
         date = values[0]
         price = values[1][:-1]
         if date >= startDate and date <= endDate:
             data[date] = price
+    fp.close()
     return data
 
+# API function
 @app.route('/commodity', methods=['GET'])
 def commodity():
     try:
@@ -44,5 +49,6 @@ def commodity():
     except:
         return jsonify({"data": {}, "mean" : "null", "variance" : "null"})
 
+# Main
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
