@@ -6,13 +6,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 import dateutil.parser as parser
 
 # Globals and Constants
-d = webdriver.Chrome()
+DRIVER_PATH = "/Users/bdhill/bin/chromedriver"
 GOLD_DATA_URL = "https://www.investing.com/commodities/gold-historical-data"
 SILVER_DATA_URL = "https://www.investing.com/commodities/silver-historical-data"
 GOLD_DATA_PATH = "data/golddateandprice.csv"
 SILVER_DATA_PATH = "data/silverdateandprice.csv"
 START_DATE = '01/01/2019'
 END_DATE ='06/06/2020'
+d = webdriver.Chrome(DRIVER_PATH)
 
 # Methods
 # Enters dates to display data in date range START_DATE to END_DATE
@@ -21,14 +22,12 @@ def display_all_dates():
     d.implicitly_wait(1)
     sDate  = d.find_element_by_id('startDate')
     sDate.clear()
-    d.implicitly_wait(1)
     sDate.send_keys(START_DATE)
     eDate = d.find_element_by_id('endDate')
     eDate.clear()
     eDate.send_keys(END_DATE)
     d.implicitly_wait(1)
     d.find_element_by_id('applyBtn').click()
-    d.implicitly_wait(2)
 
 # Writes out data table to file at path
 def write_table(path):
@@ -50,11 +49,14 @@ def write_table(path):
 # Closes email pop up banner
 def close_pop_up():
     d.implicitly_wait(2)
-    d.execute_script("""
-    (function() {
-        document.getElementsByClassName("popupCloseIcon largeBannerCloser")[0].click();
-    })()
-    """)
+    try:
+        d.execute_script("""
+        (function() {
+            document.getElementsByClassName("popupCloseIcon largeBannerCloser")[0].click();
+        })()
+        """)
+    except:
+        pass
     d.implicitly_wait(2)
 
 # Generates CSV of data retrieved from url and writes it to file at path
@@ -73,10 +75,9 @@ def generate_csv(url, path):
 # Main
 if __name__ == "__main__":
     print("Generating CSV files...")
-    # try:
-    generate_csv(GOLD_DATA_URL, GOLD_DATA_PATH)
-    generate_csv(SILVER_DATA_URL, SILVER_DATA_PATH)
-    print("Successfully generated CSV files!")
-    # except:
-    #     print("Something went wrong.")
-
+    try:
+        generate_csv(GOLD_DATA_URL, GOLD_DATA_PATH)
+        generate_csv(SILVER_DATA_URL, SILVER_DATA_PATH)
+        print("Successfully generated CSV files!")
+    except:
+        print("Oh no! Something went wrong.")
