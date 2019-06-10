@@ -12,7 +12,7 @@ def compute_mean(prices):
 
 # Computes E(X^2) - [E(X)]^2
 def compute_variance(mean, prices):
-    return sum((float(xi) - mean) ** 2 for xi in prices) / len(prices)
+    return sum((float(price) - mean) ** 2 for price in prices) / len(prices)
 
 # Reads prices from file at path in date range of startDate to endDate
 def fetch_data(path, startDate, endDate):
