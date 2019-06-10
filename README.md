@@ -11,7 +11,7 @@ All commands are run from the main project directory.
 
 1. To run the webscraper, enter the following:
 ``` bash
-python3 python3/scrape.py -d "/path/to/chromedriver"
+python3 python/scrape.py -d "/path/to/chromedriver"
 ```
 2. To run the server, enter the following:
 ``` bash
