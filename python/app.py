@@ -7,20 +7,15 @@ SILVER_DATA_PATH = "data/silverdateandprice.csv"
 
 # Methods
 # Computes E(X ^ power)
-def computeMean(data, power):
-    x = 0.0
-    n = 0
-    for _, price in data.items():
-        x += float(price) ** power
-        n += 1
-    return x / n
+def compute_mean(prices):
+    return sum(float(price) for price in prices) / len(prices)
 
 # Computes E(X^2) - [E(X)]^2
-def computeVariance(mean, data):
-    return computeMean(data, 2) - mean * mean
+def compute_variance(mean, prices):
+    return sum((float(xi) - mean) ** 2 for xi in prices) / len(prices)
 
 # Reads prices from file at path in date range of startDate to endDate
-def fetchData(path, startDate, endDate):
+def fetch_data(path, startDate, endDate):
     data = {}
     fp = open(path, "r")
     for _, line in enumerate(fp):
@@ -40,11 +35,12 @@ def commodity():
         end_date = request.args.get("end_date")
         commodity_type = request.args.get("commodity_type")
         if commodity_type == "gold":
-            data = fetchData(GOLD_DATA_PATH, start_date, end_date)
+            data = fetch_data(GOLD_DATA_PATH, start_date, end_date)
         if commodity_type == "silver":
-            data = fetchData(SILVER_DATA_PATH, start_date, end_date)
-        mean = computeMean(data, 1)
-        variance = computeVariance(mean, data)
+            data = fetch_data(SILVER_DATA_PATH, start_date, end_date)
+        prices = data.values()
+        mean = compute_mean(prices)
+        variance = compute_variance(mean, prices)
         return jsonify({"data": data, "mean" : round(mean, 2), "variance" : round(variance, 2)})
     except:
         return jsonify({"data": {}, "mean" : "null", "variance" : "null"})
