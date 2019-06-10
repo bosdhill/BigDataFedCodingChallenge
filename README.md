@@ -4,7 +4,8 @@ This is my submission for the Big Data Federation programming challenge.
 
 ## Required:
 1. Selenium for python3
-2. Chrome web driver executable (v75.0.3770.80)
+2. venv for python3
+3. Chrome web driver executable (v75.0.3770.80)
 
 ## Instructions
 All commands are run from the main project directory.
